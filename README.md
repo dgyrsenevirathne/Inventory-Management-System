@@ -1,2 +1,2 @@
 # Inventory-Management-System
-This is Attendance management mobile application. developed by using flutter and dart 
+This is Inventory management system developed by using HTML, CSS, and JavaScript and also used jason files.
