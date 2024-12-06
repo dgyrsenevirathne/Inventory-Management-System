@@ -3,8 +3,13 @@ class InventoryManager {
         this.inventory = JSON.parse(localStorage.getItem('inventory')) || [];
         this.form = document.getElementById('inventoryForm');
         this.itemList = document.getElementById('inventoryList');
+        this.categoryDropdown = document.getElementById('itemCategory');
+        this.newCategoryInput = document.getElementById('newCategory');
+        this.addCategoryBtn = document.getElementById('addCategoryBtn');
 
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        this.addCategoryBtn.addEventListener('click', () => this.addCustomCategory());
+
         this.displayInventory();
     }
 
@@ -34,6 +39,24 @@ class InventoryManager {
         this.saveToLocalStorage();
         this.displayInventory();
         this.form.reset();
+    }
+
+    addCustomCategory() {
+        const newCategory = this.newCategoryInput.value.trim();
+        if (newCategory === '') {
+            alert('Please enter a category name.');
+            return;
+        }
+
+        // Create a new option element and add it to the dropdown
+        const option = document.createElement('option');
+        option.value = newCategory;
+        option.textContent = newCategory;
+
+        this.categoryDropdown.appendChild(option);
+
+        // Optionally, clear the input field after adding the category
+        this.newCategoryInput.value = '';
     }
 
     deleteItem(id) {

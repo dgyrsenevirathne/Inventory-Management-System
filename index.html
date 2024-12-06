@@ -14,6 +14,7 @@
 
         <div class="form-container">
             <h2>Add New Item</h2>
+
             <form id="inventoryForm">
                 <input type="text" id="itemName" placeholder="Item Name" required>
                 <input type="number" id="itemQuantity" placeholder="Quantity" required>
@@ -25,10 +26,16 @@
                     <option value="Furniture">Furniture</option>
                     <option value="Food">Food</option>
                     <option value="Clothing">Clothing</option>
-                    <!-- Add more categories as needed -->
+                    <!-- New categories will be added here dynamically -->
                 </select>
+                <!-- Input and button for adding custom category -->
+                <div>
+                    <input type="text" id="newCategory" placeholder="Enter custom category">
+                    <button id="addCategoryBtn">Add Category</button>
+                </div>
                 <button type="submit">Add Item</button>
             </form>
+
 
         </div>
 
