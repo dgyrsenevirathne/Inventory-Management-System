@@ -18,8 +18,18 @@
                 <input type="text" id="itemName" placeholder="Item Name" required>
                 <input type="number" id="itemQuantity" placeholder="Quantity" required>
                 <input type="number" id="itemPrice" placeholder="Price" step="0.01" required>
+                <!-- Category Drop-down -->
+                <select id="itemCategory" required>
+                    <option value="">Select Category</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Food">Food</option>
+                    <option value="Clothing">Clothing</option>
+                    <!-- Add more categories as needed -->
+                </select>
                 <button type="submit">Add Item</button>
             </form>
+
         </div>
 
         <div class="inventory-container">
@@ -31,6 +41,7 @@
                         <th>Quantity</th>
                         <th>Price</th>
                         <th>Total Value</th>
+                        <th>Category</th> <!-- Add category column -->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -38,6 +49,7 @@
                     <!-- Items will be added here dynamically -->
                 </tbody>
             </table>
+
         </div>
     </div>
     <script src="script.js"></script>

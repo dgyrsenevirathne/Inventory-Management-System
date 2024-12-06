@@ -14,12 +14,20 @@ class InventoryManager {
         const itemName = document.getElementById('itemName').value;
         const quantity = parseInt(document.getElementById('itemQuantity').value);
         const price = parseFloat(document.getElementById('itemPrice').value);
+        const category = document.getElementById('itemCategory').value;
+
+        // Validate category selection
+        if (!category) {
+            alert('Please select a category!');
+            return;
+        }
 
         const item = {
             id: Date.now(),
             name: itemName,
             quantity: quantity,
-            price: price
+            price: price,
+            category: category
         };
 
         this.inventory.push(item);
@@ -46,6 +54,7 @@ class InventoryManager {
                 <td>${item.quantity}</td>
                 <td>$${item.price.toFixed(2)}</td>
                 <td>$${totalValue}</td>
+                <td>${item.category}</td> <!-- Display category -->
                 <td>
                     <button class="delete-btn" onclick="inventoryManager.deleteItem(${item.id})">
                         Delete
@@ -61,6 +70,7 @@ class InventoryManager {
         localStorage.setItem('inventory', JSON.stringify(this.inventory));
     }
 }
+
 document.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("mousemove", (e) => {
         const rect = btn.getBoundingClientRect();

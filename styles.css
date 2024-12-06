@@ -134,3 +134,18 @@ td {
     transform: scale(1.1);
     background: linear-gradient(135deg, #c0392b, #d32f2f);
 }
+
+/* Styling for the dropdown */
+select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: box-shadow 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+select:focus {
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
