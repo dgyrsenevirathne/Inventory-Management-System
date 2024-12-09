@@ -149,3 +149,33 @@ select:focus {
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
     outline: none;
 }
+
+.search-filter-container {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-filter-container div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.search-filter-container input,
+.search-filter-container button {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-filter-container button {
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+}
+
+.search-filter-container button:hover {
+    background-color: #0056b3;
+}

@@ -41,6 +41,34 @@
 
         <div class="inventory-container">
             <h2>Current Inventory</h2>
+
+            <!-- Search and Filter Section -->
+            <div class="search-filter-container">
+                <div>
+                    <!-- Search by item name -->
+                    <input type="text" id="searchItem" placeholder="Search by item name">
+                    <button id="searchBtn">Search</button>
+                </div>
+
+                <div>
+                    <!-- Filter by quantity -->
+                    <label for="quantityFilter">Quantity:</label>
+                    <input type="number" id="minQuantity" placeholder="Min">
+                    <input type="number" id="maxQuantity" placeholder="Max">
+                    <button id="filterQuantityBtn">Filter by Quantity</button>
+                </div>
+
+                <div>
+                    <!-- Filter by price -->
+                    <label for="priceFilter">Price:</label>
+                    <input type="number" id="minPrice" placeholder="Min" step="0.01">
+                    <input type="number" id="maxPrice" placeholder="Max" step="0.01">
+                    <button id="filterPriceBtn">Filter by Price</button>
+                </div>
+                <button id="clearFiltersBtn">Clear Filters</button>
+
+            </div>
+
             <table id="inventoryTable">
                 <thead>
                     <tr>
@@ -56,8 +84,8 @@
                     <!-- Items will be added here dynamically -->
                 </tbody>
             </table>
-
         </div>
+
     </div>
     <script src="script.js"></script>
 </body>

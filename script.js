@@ -65,10 +65,11 @@ class InventoryManager {
         this.displayInventory();
     }
 
-    displayInventory() {
+    displayInventory(filteredInventory = null) {
+        const inventoryToDisplay = filteredInventory || this.inventory;
         this.itemList.innerHTML = '';
 
-        this.inventory.forEach(item => {
+        inventoryToDisplay.forEach(item => {
             const row = document.createElement('tr');
             const totalValue = (item.quantity * item.price).toFixed(2);
 
@@ -77,7 +78,7 @@ class InventoryManager {
                 <td>${item.quantity}</td>
                 <td>$${item.price.toFixed(2)}</td>
                 <td>$${totalValue}</td>
-                <td>${item.category}</td> <!-- Display category -->
+                <td>${item.category}</td>
                 <td>
                     <button class="delete-btn" onclick="inventoryManager.deleteItem(${item.id})">
                         Delete
@@ -89,9 +90,36 @@ class InventoryManager {
         });
     }
 
+
     saveToLocalStorage() {
         localStorage.setItem('inventory', JSON.stringify(this.inventory));
     }
+
+    searchItem(name) {
+        const searchResults = this.inventory.filter(item =>
+            item.name.toLowerCase().includes(name.toLowerCase())
+        );
+        this.displayInventory(searchResults);
+    }
+
+    filterByQuantity(min, max) {
+        const filteredItems = this.inventory.filter(item =>
+            item.quantity >= min && item.quantity <= max
+        );
+        this.displayInventory(filteredItems);
+    }
+
+    filterByPrice(min, max) {
+        const filteredItems = this.inventory.filter(item =>
+            item.price >= min && item.price <= max
+        );
+        this.displayInventory(filteredItems);
+    }
+
+    clearFilters() {
+        this.displayInventory();
+    }
+
 }
 
 document.querySelectorAll("button").forEach((btn) => {
@@ -103,6 +131,28 @@ document.querySelectorAll("button").forEach((btn) => {
         btn.style.setProperty("--y", `${y}px`);
     });
 });
+
+document.getElementById('searchBtn').addEventListener('click', () => {
+    const name = document.getElementById('searchItem').value;
+    inventoryManager.searchItem(name);
+});
+
+document.getElementById('filterQuantityBtn').addEventListener('click', () => {
+    const min = parseInt(document.getElementById('minQuantity').value) || 0;
+    const max = parseInt(document.getElementById('maxQuantity').value) || Infinity;
+    inventoryManager.filterByQuantity(min, max);
+});
+
+document.getElementById('filterPriceBtn').addEventListener('click', () => {
+    const min = parseFloat(document.getElementById('minPrice').value) || 0;
+    const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+    inventoryManager.filterByPrice(min, max);
+});
+
+document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+    inventoryManager.clearFilters();
+});
+
 
 
 // Initialize the inventory manager
