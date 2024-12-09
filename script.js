@@ -6,6 +6,7 @@ class InventoryManager {
         this.categoryDropdown = document.getElementById('itemCategory');
         this.newCategoryInput = document.getElementById('newCategory');
         this.addCategoryBtn = document.getElementById('addCategoryBtn');
+        this.editingId = null; // Tracks the ID of the item being edited
 
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         this.addCategoryBtn.addEventListener('click', () => this.addCustomCategory());
@@ -27,15 +28,31 @@ class InventoryManager {
             return;
         }
 
-        const item = {
-            id: Date.now(),
-            name: itemName,
-            quantity: quantity,
-            price: price,
-            category: category
-        };
+        if (this.editingId) {
+            // Update existing item
+            const itemIndex = this.inventory.findIndex(item => item.id === this.editingId);
+            if (itemIndex !== -1) {
+                this.inventory[itemIndex] = {
+                    id: this.editingId,
+                    name: itemName,
+                    quantity: quantity,
+                    price: price,
+                    category: category,
+                };
+            }
+            this.editingId = null; // Reset editing ID
+        } else {
+            // Add new item
+            const item = {
+                id: Date.now(),
+                name: itemName,
+                quantity: quantity,
+                price: price,
+                category: category
+            };
+            this.inventory.push(item);
+        }
 
-        this.inventory.push(item);
         this.saveToLocalStorage();
         this.displayInventory();
         this.form.reset();
@@ -59,6 +76,19 @@ class InventoryManager {
         this.newCategoryInput.value = '';
     }
 
+    editItem(id) {
+        const item = this.inventory.find(item => item.id === id);
+        if (!item) return;
+
+        // Populate form fields with item details
+        document.getElementById('itemName').value = item.name;
+        document.getElementById('itemQuantity').value = item.quantity;
+        document.getElementById('itemPrice').value = item.price;
+        document.getElementById('itemCategory').value = item.category;
+
+        this.editingId = id; // Set editing ID
+    }
+
     deleteItem(id) {
         this.inventory = this.inventory.filter(item => item.id !== id);
         this.saveToLocalStorage();
@@ -80,16 +110,14 @@ class InventoryManager {
                 <td>$${totalValue}</td>
                 <td>${item.category}</td>
                 <td>
-                    <button class="delete-btn" onclick="inventoryManager.deleteItem(${item.id})">
-                        Delete
-                    </button>
+                    <button class="edit-btn" onclick="inventoryManager.editItem(${item.id})">Edit</button>
+                    <button class="delete-btn" onclick="inventoryManager.deleteItem(${item.id})">Delete</button>
                 </td>
             `;
 
             this.itemList.appendChild(row);
         });
     }
-
 
     saveToLocalStorage() {
         localStorage.setItem('inventory', JSON.stringify(this.inventory));
@@ -119,8 +147,8 @@ class InventoryManager {
     clearFilters() {
         this.displayInventory();
     }
-
 }
+
 
 document.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("mousemove", (e) => {
