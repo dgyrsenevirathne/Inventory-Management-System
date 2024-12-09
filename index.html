@@ -35,8 +35,12 @@
                 </div>
                 <button type="submit">Add Item</button>
             </form>
+        </div>
 
-
+        <!-- Low Stock Alert -->
+        <div id="stockAlert"
+            style="display:none; padding: 10px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 5px;">
+            <strong>Low Stock Alert!</strong> Some items are running low on stock.
         </div>
 
         <div class="inventory-container">
@@ -66,15 +70,13 @@
                     <button id="filterPriceBtn">Filter by Price</button>
                 </div>
                 <button id="clearFiltersBtn">Clear Filters</button>
-
             </div>
 
             <div>
                 <button id="exportCsvBtn">Export to CSV</button></br></br>
                 <input type="file" id="importCsvInput" accept=".csv">
                 <button id="importCsvBtn">Import CSV</button>
-
-            </div> </br>
+            </div></br>
 
             <table id="inventoryTable">
                 <thead>

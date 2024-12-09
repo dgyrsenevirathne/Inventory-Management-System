@@ -7,11 +7,13 @@ class InventoryManager {
         this.newCategoryInput = document.getElementById('newCategory');
         this.addCategoryBtn = document.getElementById('addCategoryBtn');
         this.editingId = null; // Tracks the ID of the item being edited
+        this.stockThreshold = 5; // Set the threshold for stock alert
 
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         this.addCategoryBtn.addEventListener('click', () => this.addCustomCategory());
 
         this.displayInventory();
+        this.checkStockLevels(); // Check stock levels on load
     }
 
     handleSubmit(e) {
@@ -56,6 +58,7 @@ class InventoryManager {
         this.saveToLocalStorage();
         this.displayInventory();
         this.form.reset();
+        this.checkStockLevels(); // Recheck stock levels after adding/updating item
     }
 
     addCustomCategory() {
@@ -93,6 +96,7 @@ class InventoryManager {
         this.inventory = this.inventory.filter(item => item.id !== id);
         this.saveToLocalStorage();
         this.displayInventory();
+        this.checkStockLevels(); // Recheck stock levels after deleting item
     }
 
     displayInventory(filteredInventory = null) {
@@ -121,6 +125,16 @@ class InventoryManager {
 
     saveToLocalStorage() {
         localStorage.setItem('inventory', JSON.stringify(this.inventory));
+    }
+
+    checkStockLevels() {
+        const lowStockItems = this.inventory.filter(item => item.quantity < this.stockThreshold);
+        if (lowStockItems.length > 0) {
+            alert('Warning: Some items have low stock!');
+            lowStockItems.forEach(item => {
+                alert(`${item.name} has only ${item.quantity} left in stock.`);
+            });
+        }
     }
 
     searchItem(name) {
@@ -194,7 +208,6 @@ class InventoryManager {
 
         reader.readAsText(file);
     }
-
 }
 
 document.querySelectorAll("button").forEach((btn) => {
