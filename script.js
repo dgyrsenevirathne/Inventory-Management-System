@@ -147,8 +147,55 @@ class InventoryManager {
     clearFilters() {
         this.displayInventory();
     }
-}
 
+    exportToCSV() {
+        const headers = ["Item Name,Quantity,Price,Total Value,Category"];
+        const rows = this.inventory.map(item => {
+            const totalValue = (item.quantity * item.price).toFixed(2);
+            return `${item.name},${item.quantity},${item.price.toFixed(2)},${totalValue},${item.category}`;
+        });
+
+        const csvContent = [headers.join("\n"), rows.join("\n")].join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "inventory.csv");
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    importFromCSV(file) {
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            const csvData = event.target.result;
+            const rows = csvData.split("\n").slice(1); // Skip the header row
+
+            rows.forEach(row => {
+                const [name, quantity, price, , category] = row.split(",");
+                if (name && quantity && price && category) {
+                    this.inventory.push({
+                        id: Date.now() + Math.random(), // Generate a unique ID
+                        name: name.trim(),
+                        quantity: parseInt(quantity.trim()),
+                        price: parseFloat(price.trim()),
+                        category: category.trim()
+                    });
+                }
+            });
+
+            this.saveToLocalStorage();
+            this.displayInventory();
+        };
+
+        reader.readAsText(file);
+    }
+
+}
 
 document.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("mousemove", (e) => {
@@ -181,7 +228,19 @@ document.getElementById('clearFiltersBtn').addEventListener('click', () => {
     inventoryManager.clearFilters();
 });
 
+document.getElementById('exportCsvBtn').addEventListener('click', () => {
+    inventoryManager.exportToCSV();
+});
 
+document.getElementById('importCsvBtn').addEventListener('click', () => {
+    const fileInput = document.getElementById('importCsvInput');
+    if (fileInput.files.length === 0) {
+        alert('Please select a CSV file to import.');
+        return;
+    }
+    const file = fileInput.files[0];
+    inventoryManager.importFromCSV(file);
+});
 
 // Initialize the inventory manager
 const inventoryManager = new InventoryManager();
