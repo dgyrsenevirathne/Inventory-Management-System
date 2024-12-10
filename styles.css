@@ -246,3 +246,17 @@ input[type="file"]:focus {
 #exportCsvBtn:hover {
     background-color: #e67e22;
 }
+
+.inventory-report {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+canvas {
+    margin: 20px auto;
+    max-width: 100%;
+}

@@ -208,6 +208,68 @@ class InventoryManager {
 
         reader.readAsText(file);
     }
+
+    generateReports() {
+        const totalValue = this.inventory.reduce((sum, item) => sum + item.quantity * item.price, 0);
+
+        const mostValuableItem = this.inventory.reduce((max, item) =>
+            (item.quantity * item.price > max.quantity * max.price ? item : max),
+            { quantity: 0, price: 0 });
+
+        const leastValuableItem = this.inventory.reduce((min, item) =>
+            (item.quantity * item.price < min.quantity * min.price ? item : min),
+            { quantity: Infinity, price: Infinity });
+
+        return {
+            totalValue: totalValue.toFixed(2),
+            mostValuableItem,
+            leastValuableItem
+        };
+    }
+
+    renderCharts() {
+        const labels = this.inventory.map(item => item.name);
+        const stockData = this.inventory.map(item => item.quantity);
+        const priceData = this.inventory.map(item => item.price);
+
+        const ctx = document.getElementById('inventoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Stock Levels',
+                        data: stockData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Prices',
+                        data: priceData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Inventory Report'
+                    }
+                }
+            }
+        });
+    }
+
+
 }
 
 document.querySelectorAll("button").forEach((btn) => {
@@ -254,6 +316,17 @@ document.getElementById('importCsvBtn').addEventListener('click', () => {
     const file = fileInput.files[0];
     inventoryManager.importFromCSV(file);
 });
+
+document.getElementById('generateReportBtn').addEventListener('click', () => {
+    const reports = inventoryManager.generateReports();
+
+    alert(`Total Inventory Value: $${reports.totalValue}`);
+    alert(`Most Valuable Item: ${reports.mostValuableItem.name} - $${(reports.mostValuableItem.quantity * reports.mostValuableItem.price).toFixed(2)}`);
+    alert(`Least Valuable Item: ${reports.leastValuableItem.name} - $${(reports.leastValuableItem.quantity * reports.leastValuableItem.price).toFixed(2)}`);
+
+    inventoryManager.renderCharts();
+});
+
 
 // Initialize the inventory manager
 const inventoryManager = new InventoryManager();
