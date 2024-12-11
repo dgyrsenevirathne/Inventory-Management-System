@@ -294,6 +294,45 @@ class InventoryManager {
         });
     }
 
+    // Add this function in your InventoryManager class
+    addItemFromBarcode(barcode) {
+        // Assuming the barcode is the same as the item name or a unique identifier
+        const item = this.inventory.find(item => item.id === barcode || item.name === barcode);
+
+        if (item) {
+            // If the item exists, prompt to update the quantity
+            const newQuantity = parseInt(prompt(`Item "${item.name}" found. Current quantity: ${item.quantity}. Enter new quantity:`));
+            if (!isNaN(newQuantity) && newQuantity >= 0) {
+                item.quantity = newQuantity; // Update the quantity
+                this.saveToLocalStorage();
+                this.displayInventory();
+                alert(`Updated "${item.name}" quantity to ${newQuantity}.`);
+            } else {
+                alert('Invalid quantity entered.');
+            }
+        } else {
+            // If the item does not exist, prompt to add a new item
+            const itemName = prompt('Item not found. Enter item name:');
+            const itemPrice = parseFloat(prompt('Enter item price:'));
+            const itemCategory = prompt('Enter item category:');
+
+            if (itemName && !isNaN(itemPrice) && itemCategory) {
+                const newItem = {
+                    id: barcode, // Use barcode as ID for simplicity
+                    name: itemName,
+                    quantity: 1, // Default quantity
+                    price: itemPrice,
+                    category: itemCategory
+                };
+                this.inventory.push(newItem);
+                this.saveToLocalStorage();
+                this.displayInventory();
+                alert(`Added new item "${itemName}" with price $${itemPrice}.`);
+            } else {
+                alert('Invalid item details entered.');
+            }
+        }
+    }
 
 }
 
@@ -409,6 +448,17 @@ document.getElementById('generateReportBtn').addEventListener('click', () => {
 
     // Render charts with the new data
     inventoryManager.renderCharts(reports.stockLevels, reports.prices, reports.labels);
+});
+
+// event listener for the barcode input
+document.getElementById('addBarcodeItemBtn').addEventListener('click', () => {
+    const barcode = document.getElementById('barcodeInput').value.trim();
+    if (barcode) {
+        inventoryManager.addItemFromBarcode(barcode);
+        document.getElementById('barcodeInput').value = ''; // Clear input after processing
+    } else {
+        alert('Please scan a barcode.');
+    }
 });
 
 

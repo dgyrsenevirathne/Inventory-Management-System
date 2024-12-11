@@ -12,10 +12,11 @@ body {
     animation: gradientBackground 10s ease infinite;
     color: #333;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     min-height: 100vh;
     transition: background 1s ease;
+    flex-direction: column;
 }
 
 /* Gradient Background Animation */
@@ -44,6 +45,7 @@ body {
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     transition: transform 0.3s ease;
+    flex-grow: 1;
 }
 
 .container:hover {
@@ -274,4 +276,33 @@ canvas {
     margin: 10px 0;
     padding: 10px;
     width: 200px;
+}
+
+.help-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+
+h1,
+h2,
+h3 {
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    margin: 10px 0;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #777;
 }
