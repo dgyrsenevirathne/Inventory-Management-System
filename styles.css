@@ -260,3 +260,18 @@ canvas {
     margin: 20px auto;
     max-width: 100%;
 }
+
+.auth-container {
+    margin: 20px;
+}
+
+.auth-container form {
+    margin-bottom: 20px;
+}
+
+.auth-container input {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 200px;
+}

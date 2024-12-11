@@ -297,6 +297,64 @@ class InventoryManager {
 
 }
 
+class UserManager {
+    constructor() {
+        this.users = JSON.parse(localStorage.getItem('users')) || [];
+        this.currentUser = null;
+
+        document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
+        document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+    }
+
+    handleRegister(e) {
+        e.preventDefault();
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+
+        // Check if user already exists
+        if (this.users.find(user => user.username === username)) {
+            alert('User  already exists!');
+            return;
+        }
+
+        // Create new user
+        const newUser = { username, password, role: 'staff' }; // Default role is staff
+        this.users.push(newUser);
+        this.saveUsers();
+        alert('Registration successful! You can now log in.');
+        document.getElementById('registerForm').reset();
+    }
+
+    handleLogin(e) {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // Check user credentials
+        const user = this.users.find(user => user.username === username && user.password === password);
+        if (user) {
+            this.currentUser = user;
+            alert(`Welcome, ${user.username}!`);
+            this.redirectToInventory();
+        } else {
+            alert('Invalid username or password!');
+        }
+    }
+
+    saveUsers() {
+        localStorage.setItem('users', JSON.stringify(this.users));
+    }
+
+    redirectToInventory() {
+        // Hide authentication forms and show inventory management
+        document.querySelector('.auth-container').style.display = 'none';
+        document.querySelector('.container').style.display = 'block'; // Assuming your inventory container has this class
+    }
+}
+
+// Initialize the user manager
+const userManager = new UserManager();
+
 document.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("mousemove", (e) => {
         const rect = btn.getBoundingClientRect();
