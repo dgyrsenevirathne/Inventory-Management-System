@@ -220,39 +220,37 @@ class InventoryManager {
             (item.quantity * item.price < min.quantity * min.price ? item : min),
             { quantity: Infinity, price: Infinity });
 
+        // Prepare data for charts
+        const stockLevels = this.inventory.map(item => item.quantity);
+        const prices = this.inventory.map(item => item.price);
+        const labels = this.inventory.map(item => item.name);
+
         return {
             totalValue: totalValue.toFixed(2),
             mostValuableItem,
-            leastValuableItem
+            leastValuableItem,
+            stockLevels,
+            prices,
+            labels
         };
     }
 
-    renderCharts() {
-        const labels = this.inventory.map(item => item.name);
-        const stockData = this.inventory.map(item => item.quantity);
-        const priceData = this.inventory.map(item => item.price);
+    renderCharts(stockLevels, prices, labels) {
+        const ctxStock = document.getElementById('inventoryStockChart').getContext('2d');
+        const ctxPrice = document.getElementById('inventoryPriceChart').getContext('2d');
 
-        const ctx = document.getElementById('inventoryChart').getContext('2d');
-        new Chart(ctx, {
+        // Stock Levels Chart
+        new Chart(ctxStock, {
             type: 'bar',
             data: {
                 labels: labels,
-                datasets: [
-                    {
-                        label: 'Stock Levels',
-                        data: stockData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Prices',
-                        data: priceData,
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
-                    }
-                ]
+                datasets: [{
+                    label: 'Stock Levels',
+                    data: stockLevels,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
@@ -262,7 +260,34 @@ class InventoryManager {
                     },
                     title: {
                         display: true,
-                        text: 'Inventory Report'
+                        text: 'Stock Levels'
+                    }
+                }
+            }
+        });
+
+        // Prices Chart
+        new Chart(ctxPrice, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Prices',
+                    data: prices,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Price Trends'
                     }
                 }
             }
@@ -324,7 +349,8 @@ document.getElementById('generateReportBtn').addEventListener('click', () => {
     alert(`Most Valuable Item: ${reports.mostValuableItem.name} - $${(reports.mostValuableItem.quantity * reports.mostValuableItem.price).toFixed(2)}`);
     alert(`Least Valuable Item: ${reports.leastValuableItem.name} - $${(reports.leastValuableItem.quantity * reports.leastValuableItem.price).toFixed(2)}`);
 
-    inventoryManager.renderCharts();
+    // Render charts with the new data
+    inventoryManager.renderCharts(reports.stockLevels, reports.prices, reports.labels);
 });
 
 
